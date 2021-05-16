@@ -1,10 +1,15 @@
 package by.bsu.fpmi.siachko.lab1.sportevent.property.place;
 
+import by.bsu.fpmi.siachko.lab1.dao.CsvIgnore;
+import by.bsu.fpmi.siachko.lab1.exception.ServiceLayerException;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.StringTokenizer;
+import java.util.regex.Pattern;
 
 @XmlRootElement
 public class Place {
@@ -19,6 +24,9 @@ public class Place {
     private String zipCode;
     @JsonProperty("address")
     private String address;
+    @CsvIgnore
+    @JsonIgnore
+    private Pattern pattern = Pattern.compile("\\d{5,6}, [A-Z]([a-z]|-| )*, [A-Z]([a-z]|-| )*, [A-Z]([a-z]|-)*, (\\w|-|,| )+");
 
     public Place(String country, String region, String locality, String zipCode, String address) {
         this.country = country;
@@ -26,6 +34,25 @@ public class Place {
         this.locality = locality;
         this.zipCode = zipCode;
         this.address = address;
+    }
+
+    public Place(String place) throws ServiceLayerException
+    {
+        if (!pattern.matcher(place).matches()){
+            throw new ServiceLayerException();
+        }
+        StringTokenizer stringTokenizer = new StringTokenizer(place, ", ");
+        this.zipCode = stringTokenizer.nextToken();
+        this.country = stringTokenizer.nextToken();
+        this.region = stringTokenizer.nextToken();
+        this.locality = stringTokenizer.nextToken();
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(stringTokenizer.nextToken());
+        while (stringTokenizer.hasMoreTokens()){
+            stringBuilder.append(", ");
+            stringBuilder.append(stringTokenizer.nextToken());
+        }
+        this.address = stringBuilder.toString();
     }
 
     public Place()

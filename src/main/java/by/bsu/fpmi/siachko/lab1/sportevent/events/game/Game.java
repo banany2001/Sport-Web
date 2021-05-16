@@ -1,5 +1,6 @@
 package by.bsu.fpmi.siachko.lab1.sportevent.events.game;
 
+import by.bsu.fpmi.siachko.lab1.sportevent.EventType;
 import by.bsu.fpmi.siachko.lab1.sportevent.property.attendance.Attendance;
 import by.bsu.fpmi.siachko.lab1.sportevent.SportEvent;
 import by.bsu.fpmi.siachko.lab1.sportevent.participant.GameParticipant;
@@ -21,8 +22,8 @@ public class Game extends SportEvent {
     @JsonProperty("gameParticipant2")
     private GameParticipant gameParticipant2;
 
-    public Game(Date date, Place place, Attendance attendance, String gameName, GameParticipant gameParticipant1, GameParticipant gameParticipant2) {
-        super(date, place, attendance);
+    public Game(EventType eventType, Date date, Place place, Attendance attendance, String gameName, GameParticipant gameParticipant1, GameParticipant gameParticipant2) {
+        super(eventType, date, place, attendance);
         this.gameName = gameName;
         this.gameParticipant1 = gameParticipant1;
         this.gameParticipant2 = gameParticipant2;

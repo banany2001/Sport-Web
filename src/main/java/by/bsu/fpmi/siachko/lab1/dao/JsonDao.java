@@ -1,5 +1,6 @@
 package by.bsu.fpmi.siachko.lab1.dao;
 
+import by.bsu.fpmi.siachko.lab1.exception.DAOLayerException;
 import by.bsu.fpmi.siachko.lab1.sportevent.SportEvent;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,14 +31,28 @@ public class JsonDao<T extends SportEvent> extends AbstractDao<T> {
     }
 
     @Override
-    public void write(List<T> list) throws IOException
+    public void write(List<T> list) throws DAOLayerException
     {
-        mapper.writerWithDefaultPrettyPrinter().writeValue(new File(fileName), list);
+        try {
+            mapper.writerWithDefaultPrettyPrinter().writeValue(new File(fileName), list);
+        }
+        catch (IOException ex)
+        {
+            throw new DAOLayerException();
+        }
     }
 
     @Override
-    public List<T> read() throws IOException
+    public List<T> read() throws DAOLayerException
     {
-        return mapper.readValue(new File(fileName), new TypeReference<ArrayList<T>>() {});
+        List<T> list = null;
+        try {
+            list = mapper.readValue(new File(fileName), new TypeReference<ArrayList<T>>() {});
+        }
+        catch (IOException ex)
+        {
+            throw new DAOLayerException();
+        }
+        return list;
     }
 }

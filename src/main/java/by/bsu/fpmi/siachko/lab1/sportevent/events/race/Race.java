@@ -1,5 +1,6 @@
 package by.bsu.fpmi.siachko.lab1.sportevent.events.race;
 
+import by.bsu.fpmi.siachko.lab1.sportevent.EventType;
 import by.bsu.fpmi.siachko.lab1.sportevent.property.attendance.Attendance;
 import by.bsu.fpmi.siachko.lab1.sportevent.SportEvent;
 import by.bsu.fpmi.siachko.lab1.sportevent.property.date.Date;
@@ -23,8 +24,8 @@ public class Race extends SportEvent {
     @JsonDeserialize(as = ArrayList.class)
     private ArrayList<RaceParticipant> raceParticipants;
 
-    public Race(Date date, Place place, Attendance attendance, String raceName, ArrayList<RaceParticipant> raceParticipants) {
-        super(date, place, attendance);
+    public Race(EventType eventType, Date date, Place place, Attendance attendance, String raceName, ArrayList<RaceParticipant> raceParticipants) {
+        super(eventType, date, place, attendance);
         this.raceName = raceName;
         this.raceParticipants = raceParticipants;
         Collections.sort(this.raceParticipants, new Comparator<RaceParticipant>() {

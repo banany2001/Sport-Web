@@ -1,5 +1,6 @@
 package by.bsu.fpmi.siachko.lab1.dao;
 
+import by.bsu.fpmi.siachko.lab1.exception.DAOLayerException;
 import by.bsu.fpmi.siachko.lab1.sportevent.SportEvent;
 
 import javax.xml.bind.JAXBException;
@@ -15,8 +16,8 @@ public abstract class AbstractDao<T extends SportEvent> implements Dao<T>{
         this.fileName = fileName;
     }
 
-    public abstract List<T> read() throws IOException, Exception;
-    public abstract void write(List<T> list) throws JAXBException, IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException;
+    public abstract List<T> read() throws DAOLayerException;
+    public abstract void write(List<T> list) throws DAOLayerException;
 
 
 }

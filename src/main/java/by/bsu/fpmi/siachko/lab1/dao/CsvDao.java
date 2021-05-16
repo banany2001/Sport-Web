@@ -1,5 +1,6 @@
 package by.bsu.fpmi.siachko.lab1.dao;
 
+import by.bsu.fpmi.siachko.lab1.exception.DAOLayerException;
 import by.bsu.fpmi.siachko.lab1.sportevent.SportEvent;
 import by.bsu.fpmi.siachko.lab1.sportevent.participant.RaceParticipant;
 
@@ -41,62 +42,68 @@ public class CsvDao<T extends SportEvent> extends AbstractDao<T> {
         printWriter.print(object);
     }
 
-    private void writeObject(Object object, Class<?> tClass) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException
+    private void writeObject(Object object, Class<?> tClass) throws DAOLayerException
     {
-        if (tClass.getPackage().equals(Integer.class.getPackage())){
-            writeNativeObject(object, tClass);
-            return;
-        }
-        printWriter.print(tClass.getCanonicalName());
-        if (!tClass.getSuperclass().equals(Object.class)){
-            printWriter.print(";");
-            writeObject(object, tClass.getSuperclass());
-        }
-        Field[] fields = tClass.getDeclaredFields();
-        for (Field field : fields){
+        try
+        {
+            if (tClass.getPackage().equals(Integer.class.getPackage())){
+                writeNativeObject(object, tClass);
+                return;
+            }
+            printWriter.print(tClass.getCanonicalName());
+            if (!tClass.getSuperclass().equals(Object.class)){
+                printWriter.print(";");
+                writeObject(object, tClass.getSuperclass());
+            }
+            Field[] fields = tClass.getDeclaredFields();
+            for (Field field : fields){
 
-
-            Annotation[] annotations = field.getDeclaredAnnotations();
-            boolean ignoreFound = false;
-            for (Annotation annotation : annotations){
-                if (annotation.toString().equals("@by.bsu.fpmi.siachko.lab1.reading.CsvIgnore()")){
-                    ignoreFound = true;
+                Annotation[] annotations = field.getDeclaredAnnotations();
+                boolean ignoreFound = false;
+                for (Annotation annotation : annotations){
+                    if (annotation.toString().equals("@by.bsu.fpmi.siachko.lab1.reading.CsvIgnore()")){
+                        ignoreFound = true;
+                    }
                 }
-            }
 
-            if (ignoreFound){
-                continue;
-            }
+                if (ignoreFound){
+                    continue;
+                }
 
-            String fieldName = field.getName();
-            //System.out.println(fieldName);
+                String fieldName = field.getName();
+                //System.out.println(fieldName);
             /*if (fieldName.equals("total")){
                 continue;
             }*/
-            printWriter.print(";");
-            StringBuilder getterName = new StringBuilder();
-            if (field.getType().equals(Boolean.class) || field.getType().getName().equals("boolean")){
-                getterName.append("is");
-            }
-            else {
-                getterName.append("get");
-            }
-            getterName.append(Character.toUpperCase(fieldName.charAt(0))).append(fieldName.substring(1));
-            Method getter = tClass.getMethod(getterName.toString());
-            Object getterResult = getter.invoke(object);
-
-            if (!fieldName.equals("raceParticipants")){
-                writeObject(getterResult, getterResult.getClass());
-                continue;
-            }
-
-            printWriter.print("ArrayList;");
-            ArrayList<RaceParticipant> raceParticipants = (ArrayList<RaceParticipant>) getterResult;
-            printWriter.print(raceParticipants.size());
-            for (RaceParticipant participant : raceParticipants){
                 printWriter.print(";");
-                writeObject(participant, participant.getClass());
+                StringBuilder getterName = new StringBuilder();
+                if (field.getType().equals(Boolean.class) || field.getType().getName().equals("boolean")){
+                    getterName.append("is");
+                }
+                else {
+                    getterName.append("get");
+                }
+                getterName.append(Character.toUpperCase(fieldName.charAt(0))).append(fieldName.substring(1));
+                Method getter = tClass.getMethod(getterName.toString());
+                Object getterResult = getter.invoke(object);
+
+                if (!fieldName.equals("raceParticipants")){
+                    writeObject(getterResult, getterResult.getClass());
+                    continue;
+                }
+
+                printWriter.print("ArrayList;");
+                ArrayList<RaceParticipant> raceParticipants = (ArrayList<RaceParticipant>) getterResult;
+                printWriter.print(raceParticipants.size());
+                for (RaceParticipant participant : raceParticipants){
+                    printWriter.print(";");
+                    writeObject(participant, participant.getClass());
+                }
             }
+        }
+        catch (Exception ex)
+        {
+            throw new DAOLayerException();
         }
     }
 
@@ -105,88 +112,108 @@ public class CsvDao<T extends SportEvent> extends AbstractDao<T> {
         return tClass.getConstructor(String.class).newInstance(lineScanner.next());
     }
 
-    private Object readObject(Object object) throws Exception, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException
+    private Object readObject(Object object) throws DAOLayerException
     {
 
-        Class<?> tClass = Class.forName(lineScanner.next());
-        if (tClass.getPackage().equals(Integer.class.getPackage())){
-            return readNativeObject(tClass);
-        }
-        if (object == null){
-            object = tClass.getConstructor().newInstance();
-        }
-        if (!tClass.getSuperclass().equals(Object.class)){
-            readObject(object);
-        }
-        Field[] fields = tClass.getDeclaredFields();
-        for (Field field : fields){
+        try{
+            Class<?> tClass = Class.forName(lineScanner.next());
+            if (tClass.getPackage().equals(Integer.class.getPackage())){
+                return readNativeObject(tClass);
+            }
+            if (object == null){
+                object = tClass.getConstructor().newInstance();
+            }
+            if (!tClass.getSuperclass().equals(Object.class)){
+                readObject(object);
+            }
+            Field[] fields = tClass.getDeclaredFields();
+            for (Field field : fields){
 
-            Annotation[] annotations = field.getDeclaredAnnotations();
-            boolean ignoreFound = false;
-            for (Annotation annotation : annotations){
-                //System.out.println(annotation.toString());
-                if (annotation.toString().equals("@by.bsu.fpmi.siachko.lab1.reading.CsvIgnore()")){
-                    ignoreFound = true;
+                Annotation[] annotations = field.getDeclaredAnnotations();
+                boolean ignoreFound = false;
+                for (Annotation annotation : annotations){
+                    //System.out.println(annotation.toString());
+                    if (annotation.toString().equals("@by.bsu.fpmi.siachko.lab1.reading.CsvIgnore()")){
+                        ignoreFound = true;
+                    }
                 }
-            }
 
-            if (ignoreFound){
-                continue;
-            }
+                if (ignoreFound){
+                    continue;
+                }
 
-            String fieldName = field.getName();
+                String fieldName = field.getName();
             /*if (fieldName.equals("total")){
                 continue;
             }*/
-            //System.out.println(fieldName);
-            StringBuilder setterName = new StringBuilder().append("set")
-                    .append(Character.toUpperCase(fieldName.charAt(0)))
-                    .append(fieldName.substring(1));
-            Method setter = tClass.getMethod(setterName.toString(), field.getType());
+                //System.out.println(fieldName);
+                StringBuilder setterName = new StringBuilder().append("set")
+                        .append(Character.toUpperCase(fieldName.charAt(0)))
+                        .append(fieldName.substring(1));
+                Method setter = tClass.getMethod(setterName.toString(), field.getType());
 
-            if (!fieldName.equals("raceParticipants")){
-                setter.invoke(object, readObject(null));
-                continue;
+                if (!fieldName.equals("raceParticipants")){
+                    setter.invoke(object, readObject(null));
+                    continue;
+                }
+
+                String className = lineScanner.next();
+                int n;
+                n = Integer.parseInt(lineScanner.next());
+                ArrayList<RaceParticipant> raceParticipants = new ArrayList<>();
+                while (n != 0){
+                    raceParticipants.add((RaceParticipant) readObject(null));
+                    n--;
+                }
+
+                setter.invoke(object, raceParticipants);
+
             }
-
-            String className = lineScanner.next();
-            int n;
-            n = Integer.parseInt(lineScanner.next());
-            ArrayList<RaceParticipant> raceParticipants = new ArrayList<>();
-            while (n != 0){
-                raceParticipants.add((RaceParticipant) readObject(null));
-                n--;
-            }
-
-            setter.invoke(object, raceParticipants);
-
+        }
+        catch (Exception ex)
+        {
+            throw new DAOLayerException();
         }
 
         return object;
     }
 
     @Override
-    public List<T> read() throws IOException, Exception
+    public List<T> read() throws DAOLayerException
     {
         List<T> list = new ArrayList<>();
-        scanner = new Scanner(new File(fileName));
-        while (scanner.hasNextLine()){
-            lineScanner = new Scanner(scanner.nextLine()).useDelimiter(";");
-            list.add((T) readObject(null));
+        try
+        {
+            scanner = new Scanner(new File(fileName));
+            while (scanner.hasNextLine()){
+                lineScanner = new Scanner(scanner.nextLine()).useDelimiter(";");
+                list.add((T) readObject(null));
+            }
         }
+        catch (IOException | DAOLayerException ex)
+        {
+            throw new DAOLayerException();
+        }
+
         return list;
     }
 
     @Override
-    public void write(List<T> list) throws IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException
+    public void write(List<T> list) throws DAOLayerException
     {
-        printWriter = new PrintWriter(new File(fileName));
-        for (T object : list)
-        {
-            writeObject(object, object.getClass());
-            printWriter.println();
+        try {
+            printWriter = new PrintWriter(new File(fileName));
+            for (T object : list)
+            {
+                writeObject(object, object.getClass());
+                printWriter.println();
+            }
+            printWriter.close();
         }
-        printWriter.close();
+        catch (IOException | DAOLayerException ex)
+        {
+            throw new DAOLayerException();
+        }
     }
 
 }

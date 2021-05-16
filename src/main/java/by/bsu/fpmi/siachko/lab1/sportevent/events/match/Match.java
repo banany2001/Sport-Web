@@ -1,5 +1,7 @@
 package by.bsu.fpmi.siachko.lab1.sportevent.events.match;
 
+import by.bsu.fpmi.siachko.lab1.exception.ServiceLayerException;
+import by.bsu.fpmi.siachko.lab1.sportevent.EventType;
 import by.bsu.fpmi.siachko.lab1.sportevent.property.attendance.Attendance;
 import by.bsu.fpmi.siachko.lab1.sportevent.SportEvent;
 import by.bsu.fpmi.siachko.lab1.sportevent.participant.MatchParticipant;
@@ -21,11 +23,16 @@ public class Match extends SportEvent {
     @JsonProperty("matchParticipant2")
     private MatchParticipant matchParticipant2;
 
-    public Match(Date date, Place place, Attendance attendance, String matchName, MatchParticipant matchParticipant1, MatchParticipant matchParticipant2) {
-        super(date, place, attendance);
+    public Match(EventType eventType, Date date, Place place, Attendance attendance, String matchName, MatchParticipant matchParticipant1, MatchParticipant matchParticipant2)
+                    throws ServiceLayerException
+    {
+        super(eventType, date, place, attendance);
         this.matchName = matchName;
         this.matchParticipant1 = matchParticipant1;
         this.matchParticipant2 = matchParticipant2;
+        if (!(matchParticipant1.isResult() == matchParticipant2.isResult())){
+            throw new ServiceLayerException();
+        }
     }
 
     public Match()

@@ -1,6 +1,7 @@
 package by.bsu.fpmi.siachko.lab1.dao;
 
 import by.bsu.fpmi.siachko.lab1.demo.EventsList;
+import by.bsu.fpmi.siachko.lab1.exception.DAOLayerException;
 import by.bsu.fpmi.siachko.lab1.sportevent.SportEvent;
 
 import javax.xml.bind.JAXBContext;
@@ -16,14 +17,20 @@ public class XMLDao<T extends SportEvent> extends AbstractDao<T> {
     private Marshaller marshaller;
     Class<T> tClass;
 
-    private XMLDao(String fileName, Class<T> tClass) throws JAXBException {
+    private XMLDao(String fileName, Class<T> tClass) throws DAOLayerException {
         super(fileName);
-        context = JAXBContext.newInstance(tClass, EventsList.class);
-        marshaller = context.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+        try {
+            context = JAXBContext.newInstance(tClass, EventsList.class);
+            marshaller = context.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+        }
+        catch (JAXBException ex)
+        {
+            throw new DAOLayerException();
+        }
     }
 
-    public static <T> Dao<T> create(String fileName, Class<T> tClass, Class<?> aClass) throws JAXBException
+    public static <T> Dao<T> create(String fileName, Class<T> tClass, Class<?> aClass) throws DAOLayerException
     {
         return (Dao<T>) Proxy.newProxyInstance(
                 aClass.getClassLoader(),
@@ -33,16 +40,30 @@ public class XMLDao<T extends SportEvent> extends AbstractDao<T> {
     }
 
     @Override
-    public void write(List<T> list) throws JAXBException {
-        EventsList<T> metaList = new EventsList<>();
-        metaList.setList(list);
-        marshaller.marshal(metaList, new File(fileName));
+    public void write(List<T> list) throws DAOLayerException {
+        try {
+            EventsList<T> metaList = new EventsList<>();
+            metaList.setList(list);
+            marshaller.marshal(metaList, new File(fileName));
+        }
+        catch (JAXBException ex)
+        {
+            throw new DAOLayerException();
+        }
     }
 
     @Override
-    public List<T> read() throws JAXBException
+    public List<T> read() throws DAOLayerException
     {
-        return ((EventsList<T>) context.createUnmarshaller().unmarshal(new File(fileName))).getList();
+        List<T> list = null;
+        try {
+            list = ((EventsList<T>) context.createUnmarshaller().unmarshal(new File(fileName))).getList();
+        }
+        catch (JAXBException ex)
+        {
+            throw new DAOLayerException();
+        }
+        return list;
     }
 
 }

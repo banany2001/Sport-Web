@@ -1,11 +1,14 @@
 package by.bsu.fpmi.siachko.lab1.sportevent.property.attendance;
 
 import by.bsu.fpmi.siachko.lab1.dao.CsvIgnore;
+import by.bsu.fpmi.siachko.lab1.exception.LayerException;
+import by.bsu.fpmi.siachko.lab1.exception.ServiceLayerException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.regex.Pattern;
 
 @XmlRootElement
 public class Attendance {
@@ -23,6 +26,9 @@ public class Attendance {
     @JsonIgnore
     @CsvIgnore
     private int total;
+    @JsonIgnore
+    @CsvIgnore
+    private Pattern pattern = Pattern.compile("[0-9]+");
 
     public Attendance(int peopleUntil18, int peopleUntil30, int peopleUntil45, int peopleUntil60, int peopleAfter60) {
         this.peopleUntil18 = peopleUntil18;
@@ -31,6 +37,22 @@ public class Attendance {
         this.peopleUntil60 = peopleUntil60;
         this.peopleAfter60 = peopleAfter60;
         this.total = peopleUntil18 + peopleUntil30 + peopleUntil45 + peopleUntil60 + peopleAfter60;
+    }
+
+    public Attendance(String peopleUntil18, String peopleUntil30, String peopleUntil45,
+                      String peopleUntil60, String peopleAfter60) throws ServiceLayerException
+    {
+        if (!pattern.matcher(peopleUntil18).matches() || !pattern.matcher(peopleUntil30).matches() ||
+            !pattern.matcher(peopleUntil45).matches() || !pattern.matcher(peopleUntil60).matches() ||
+            !pattern.matcher(peopleAfter60).matches())
+        {
+            throw new ServiceLayerException();
+        }
+        this.peopleUntil18 = Integer.parseInt(peopleUntil18);
+        this.peopleUntil30 = Integer.parseInt(peopleUntil30);
+        this.peopleUntil45 = Integer.parseInt(peopleUntil45);
+        this.peopleUntil60 = Integer.parseInt(peopleUntil60);
+        this.peopleAfter60 = Integer.parseInt(peopleAfter60);
     }
 
     public Attendance()

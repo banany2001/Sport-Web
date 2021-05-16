@@ -1,9 +1,13 @@
 package by.bsu.fpmi.siachko.lab1.sportevent.participant;
 
+import by.bsu.fpmi.siachko.lab1.dao.CsvIgnore;
+import by.bsu.fpmi.siachko.lab1.exception.ServiceLayerException;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.regex.Pattern;
 
 @XmlRootElement
 public class MatchParticipant extends Participant{
@@ -11,9 +15,22 @@ public class MatchParticipant extends Participant{
     @JsonProperty("result")
     private boolean result;
 
+    @JsonIgnore
+    @CsvIgnore
+    Pattern pattern = Pattern.compile("(false|true)");
+
     public MatchParticipant(String name, boolean result) {
         super(name);
         this.result = result;
+    }
+
+    public MatchParticipant(String name, String result) throws ServiceLayerException
+    {
+        super(name);
+        if (!pattern.matcher(result).matches()){
+            throw new ServiceLayerException();
+        }
+        this.result = Boolean.parseBoolean(result);
     }
 
     public MatchParticipant()

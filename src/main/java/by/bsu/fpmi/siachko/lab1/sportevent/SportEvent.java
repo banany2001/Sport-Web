@@ -1,11 +1,13 @@
 package by.bsu.fpmi.siachko.lab1.sportevent;
 
+import by.bsu.fpmi.siachko.lab1.dao.CsvIgnore;
 import by.bsu.fpmi.siachko.lab1.sportevent.events.game.Game;
 import by.bsu.fpmi.siachko.lab1.sportevent.events.match.Match;
 import by.bsu.fpmi.siachko.lab1.sportevent.events.race.Race;
 import by.bsu.fpmi.siachko.lab1.sportevent.property.attendance.Attendance;
 import by.bsu.fpmi.siachko.lab1.sportevent.property.date.Date;
 import by.bsu.fpmi.siachko.lab1.sportevent.property.place.Place;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -16,14 +18,25 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 @XmlSeeAlso({Race.class, Match.class, Game.class})
 public abstract class SportEvent {
 
-    @JsonProperty("date")
-    Date date;
-    @JsonProperty("place")
-    Place place;
-    @JsonProperty("attendance")
-    Attendance attendance;
+    @JsonIgnore
+    @CsvIgnore
+    private static int nextUuid = 1;
 
-    public SportEvent(Date date, Place place, Attendance attendance) {
+    @JsonProperty("uuid")
+    protected int uuid;
+    @JsonProperty("type")
+    protected EventType eventType;
+    @JsonProperty("date")
+    protected Date date;
+    @JsonProperty("place")
+    protected Place place;
+    @JsonProperty("attendance")
+    protected Attendance attendance;
+
+    public SportEvent(EventType eventType, Date date, Place place, Attendance attendance) {
+        this.uuid = nextUuid;
+        nextUuid++;
+        this.eventType = eventType;
         this.date = date;
         this.place = place;
         this.attendance = attendance;
@@ -32,6 +45,24 @@ public abstract class SportEvent {
     public SportEvent()
     {
 
+    }
+
+    public static void setNextUuid(int nextUuid) {
+        SportEvent.nextUuid = nextUuid;
+    }
+
+    @XmlElement()
+    public int getUuid() {
+        return uuid;
+    }
+
+    @XmlElement()
+    public EventType getEventType() {
+        return eventType;
+    }
+
+    public void setEventType(EventType eventType) {
+        this.eventType = eventType;
     }
 
     @XmlElement()
