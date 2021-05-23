@@ -4,4 +4,36 @@
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
+  <servlet>
+    <servlet-name>GameServlet</servlet-name>
+    <servlet-class>by.bsu.fpmi.siachko.lab1.servlets.GameServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>MatchServlet</servlet-name>
+    <servlet-class>by.bsu.fpmi.siachko.lab1.servlets.MatchServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>IndexServlet</servlet-name>
+    <servlet-class>by.bsu.fpmi.siachko.lab1.servlets.IndexServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>AddGameServlet</servlet-name>
+    <servlet-class>by.bsu.fpmi.siachko.lab1.servlets.AddGameServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GameServlet</servlet-name>
+    <url-pattern>/game</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>MatchServlet</servlet-name>
+    <url-pattern>/match</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>IndexServlet</servlet-name>
+    <url-pattern>/index</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>AddGameServlet</servlet-name>
+    <url-pattern>/add-game</url-pattern>
+  </servlet-mapping>
 </web-app>

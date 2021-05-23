@@ -30,7 +30,7 @@ public class Match extends SportEvent {
         this.matchName = matchName;
         this.matchParticipant1 = matchParticipant1;
         this.matchParticipant2 = matchParticipant2;
-        if (!(matchParticipant1.isResult() == matchParticipant2.isResult())){
+        if (matchParticipant1.isResult() == matchParticipant2.isResult()){
             throw new ServiceLayerException();
         }
     }
