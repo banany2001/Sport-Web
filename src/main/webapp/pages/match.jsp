@@ -13,7 +13,7 @@
 </head>
 <body>
 
-<h2>Tennis matches</h2>
+<h2>Matches</h2>
 <table border="5">
     <tr>
         <td>ID</td>
@@ -65,13 +65,13 @@
             <td>${item.attendance.peopleAfter60}</td>
             <td>${item.attendance.total}</td>
             <td>
-                <button onclick="location.href='/delete'">Delete</button>
-                <button onclick="location.href='/edit'">Edit</button>
+                <button onclick="location.href='match?action=delete&id=${item.uuid}'">Delete</button>
+                <button onclick="location.href='match?action=edit&id=${item.uuid}'">Edit</button>
             </td>
         </tr>
     </c:forEach>
 </table>
-<button onclick="location.href='/add'">Add</button>
+<button onclick="location.href='match?action=add'">Add</button>
 <a href="/Sport">Back to main page</a>
 
 </body>

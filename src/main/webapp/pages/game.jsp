@@ -12,7 +12,7 @@
     <title>Sport</title>
 </head>
 <body>
-<h2>Football games</h2>
+<h2>Games</h2>
 <table border="5">
     <tr>
         <td>ID</td>
@@ -46,14 +46,14 @@
             <td>${item.attendance.peopleAfter60}</td>
             <td>${item.attendance.total}</td>
             <td>
-                <button onclick="location.href='/delete'">Delete</button>
-                <button onclick="location.href='/edit'">Edit</button>
+                <button onclick="location.href='game?action=delete&id=${item.uuid}'">Delete</button>
+                <button onclick="location.href='game?action=edit&id=${item.uuid}'">Edit</button>
             </td>
         </tr>
     </c:forEach>
 </table>
-<button onclick="location.href='/add'">Add</button>
-<a href="/Sport">Back to main page</a>
+<button onclick="location.href='game?action=add'">Add</button>
+<a href='/Sport'>Back to main page</a>
 
 </body>
 </html>

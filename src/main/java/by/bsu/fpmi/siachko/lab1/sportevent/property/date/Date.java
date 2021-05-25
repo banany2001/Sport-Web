@@ -22,15 +22,29 @@ public class Date {
     int month;
     @JsonProperty("year")
     int year;
+
+    @JsonProperty("day_number")
+    String dayNumber;
+
     @JsonIgnore
     @CsvIgnore
     Pattern pattern = Pattern.compile("\\d{2}/(0\\d{1}|1[0-2])/\\d{1,9}");
+
+    @XmlElement()
+    public String getDayNumber() {
+        return dayNumber;
+    }
+
+    public void setDayNumber(String dayNumber) {
+        this.dayNumber = dayNumber;
+    }
 
     public Date(String dayOfWeek, int day, int month, int year) {
         this.dayOfWeek = dayOfWeek;
         this.day = day;
         this.month = month;
         this.year = year;
+        dayNumber = Integer.toString(day) + "/" + Integer.toString(month) + "/" + Integer.toString(year);
     }
 
     public Date(String dayOfWeek, String date) throws ServiceLayerException
@@ -43,6 +57,7 @@ public class Date {
         this.day = Integer.parseInt(stringTokenizer.nextToken());
         this.month = Integer.parseInt(stringTokenizer.nextToken());
         this.year = Integer.parseInt(stringTokenizer.nextToken());
+        dayNumber = date;
     }
 
     public Date()

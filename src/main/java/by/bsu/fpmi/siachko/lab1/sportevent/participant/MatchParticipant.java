@@ -17,7 +17,7 @@ public class MatchParticipant extends Participant{
 
     @JsonIgnore
     @CsvIgnore
-    Pattern pattern = Pattern.compile("(false|true)");
+    Pattern pattern = Pattern.compile("(V|X)");
 
     public MatchParticipant(String name, boolean result) {
         super(name);
@@ -30,7 +30,12 @@ public class MatchParticipant extends Participant{
         if (!pattern.matcher(result).matches()){
             throw new ServiceLayerException();
         }
-        this.result = Boolean.parseBoolean(result);
+        if (result.equals("V")){
+            this.result = true;
+        }
+        else {
+            this.result = false;
+        }
     }
 
     public MatchParticipant()

@@ -56,6 +56,10 @@ public abstract class SportEvent {
         return uuid;
     }
 
+    public void setUuid(int uuid) {
+        this.uuid = uuid;
+    }
+
     @XmlElement()
     public EventType getEventType() {
         return eventType;
