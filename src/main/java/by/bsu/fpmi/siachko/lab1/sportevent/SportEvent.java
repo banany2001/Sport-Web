@@ -1,5 +1,6 @@
 package by.bsu.fpmi.siachko.lab1.sportevent;
 
+import by.bsu.fpmi.siachko.lab1.dao.CsvEnum;
 import by.bsu.fpmi.siachko.lab1.dao.CsvIgnore;
 import by.bsu.fpmi.siachko.lab1.sportevent.events.game.Game;
 import by.bsu.fpmi.siachko.lab1.sportevent.events.match.Match;
@@ -24,6 +25,7 @@ public abstract class SportEvent {
 
     @JsonProperty("uuid")
     protected int uuid;
+    @CsvEnum
     @JsonProperty("type")
     protected EventType eventType;
     @JsonProperty("date")

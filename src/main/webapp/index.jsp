@@ -6,10 +6,13 @@
     <h2>Sport Events</h2>
     <ul>
         <li>
-            <a href="game">Football games</a>
+            <a href="game">Games</a>
         </li>
         <li>
-            <a href="match">Tennis matches</a>
+            <a href="match">Matches</a>
+        </li>
+        <li>
+            <a href="attendance-statistics">Attendance statistics</a>
         </li>
     </ul>
 

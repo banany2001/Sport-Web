@@ -1,6 +1,7 @@
 package by.bsu.fpmi.siachko.lab1.dao;
 
 import by.bsu.fpmi.siachko.lab1.exception.DAOLayerException;
+import by.bsu.fpmi.siachko.lab1.sportevent.EventType;
 import by.bsu.fpmi.siachko.lab1.sportevent.SportEvent;
 import by.bsu.fpmi.siachko.lab1.sportevent.participant.RaceParticipant;
 
@@ -58,13 +59,21 @@ public class CsvDao<T extends SportEvent> extends AbstractDao<T> {
             Field[] fields = tClass.getDeclaredFields();
             for (Field field : fields){
 
+                //System.out.println(field);
                 Annotation[] annotations = field.getDeclaredAnnotations();
                 boolean ignoreFound = false;
                 for (Annotation annotation : annotations){
-                    if (annotation.toString().equals("@by.bsu.fpmi.siachko.lab1.reading.CsvIgnore()")){
+                    if (annotation.toString().equals("@by.bsu.fpmi.siachko.lab1.dao.CsvIgnore()")){
+                        ignoreFound = true;
+                        //System.out.println(annotation);
+                    }
+                    if (annotation.toString().equals("@by.bsu.fpmi.siachko.lab1.dao.CsvEnum()")){
+                        printWriter.print(";");
+                        printWriter.print(((SportEvent)object).getEventType());
                         ignoreFound = true;
                     }
                 }
+                //System.out.println(ignoreFound);
 
                 if (ignoreFound){
                     continue;
@@ -133,7 +142,20 @@ public class CsvDao<T extends SportEvent> extends AbstractDao<T> {
                 boolean ignoreFound = false;
                 for (Annotation annotation : annotations){
                     //System.out.println(annotation.toString());
-                    if (annotation.toString().equals("@by.bsu.fpmi.siachko.lab1.reading.CsvIgnore()")){
+                    if (annotation.toString().equals("@by.bsu.fpmi.siachko.lab1.dao.CsvIgnore()")){
+                        ignoreFound = true;
+                    }
+                    if (annotation.toString().equals("@by.bsu.fpmi.siachko.lab1.dao.CsvEnum()")){
+                        String s = lineScanner.next();
+                        if (s.equals("Game")){
+                            ((SportEvent)object).setEventType(EventType.GAME);
+                        }
+                        else if (s.equals("Match")){
+                            ((SportEvent)object).setEventType(EventType.MATCH);
+                        }
+                        else {
+                            ((SportEvent)object).setEventType(EventType.RACE);
+                        }
                         ignoreFound = true;
                     }
                 }

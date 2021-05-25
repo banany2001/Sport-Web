@@ -16,6 +16,10 @@
     <servlet-name>IndexServlet</servlet-name>
     <servlet-class>by.bsu.fpmi.siachko.lab1.servlets.IndexServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>AttendanceStatisticsServlet</servlet-name>
+    <servlet-class>by.bsu.fpmi.siachko.lab1.servlets.AttendanceStatisticsServlet</servlet-class>
+  </servlet>
   <servlet-mapping>
     <servlet-name>GameServlet</servlet-name>
     <url-pattern>/game</url-pattern>
@@ -27,5 +31,9 @@
   <servlet-mapping>
     <servlet-name>IndexServlet</servlet-name>
     <url-pattern>/index</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>AttendanceStatisticsServlet</servlet-name>
+    <url-pattern>/attendance-statistics</url-pattern>
   </servlet-mapping>
 </web-app>

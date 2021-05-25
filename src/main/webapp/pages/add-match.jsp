@@ -98,6 +98,7 @@
     </table>
     <button type="submit">Add</button>
 </form>
+<a href="/Sport/match">Back to match page</a>
 
 </body>
 </html>

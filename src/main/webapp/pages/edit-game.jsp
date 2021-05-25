@@ -100,6 +100,7 @@
     </table>
     <button type="submit">Edit</button>
 </form>
+<a href="/Sport/game">Back to game page</a>
 
 </body>
 </html>

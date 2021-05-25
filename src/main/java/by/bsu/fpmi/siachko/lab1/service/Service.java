@@ -24,7 +24,7 @@ import java.util.List;
 
 public class Service {
 
-    private FileType fileType = FileType.XML;
+    private FileType fileType = FileType.CSV;
     private Dao<SportEvent> dao;
 
     public Service() throws FileNotFoundException
