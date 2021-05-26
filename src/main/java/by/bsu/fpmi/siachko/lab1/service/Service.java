@@ -111,7 +111,7 @@ public class Service {
         }
     }
 
-    public EventsList<SportEvent> read(String name) throws ServiceLayerException
+    public synchronized EventsList<SportEvent> read(String name) throws ServiceLayerException
     {
         EventsList<SportEvent> list = new EventsList<>();
 
@@ -138,13 +138,13 @@ public class Service {
         return list;
     }
 
-    private void write(String name, EventsList<SportEvent> list) throws DAOLayerException
+    private synchronized void write(String name, EventsList<SportEvent> list) throws DAOLayerException
     {
         createDao(name);
         dao.write(list.getList());
     }
 
-    public void addNewGame(String gameName, String name1,  String points1, String name2, String points2,
+    public synchronized void addNewGame(String gameName, String name1,  String points1, String name2, String points2,
                            String dayOfWeek, String date, String place, String peopleUntil18, String peopleUntil30,
                            String peopleUntil45, String peopleUntil60, String peopleAfter60) throws ServiceLayerException
     {
@@ -175,7 +175,7 @@ public class Service {
 
     }
 
-    public void addNewMatch(String matchName, String name1,  String result1, String name2, String result2,
+    public synchronized void addNewMatch(String matchName, String name1,  String result1, String name2, String result2,
                             String dayOfWeek, String date, String place, String peopleUntil18, String peopleUntil30,
                             String peopleUntil45, String peopleUntil60, String peopleAfter60) throws ServiceLayerException
     {
@@ -207,7 +207,7 @@ public class Service {
 
     }
 
-    public Game getGameByUuid(int uuid) throws ServiceLayerException
+    public synchronized Game getGameByUuid(int uuid) throws ServiceLayerException
     {
         try
         {
@@ -228,7 +228,7 @@ public class Service {
         return null;
     }
 
-    public Match getMatchByUuid(int uuid) throws ServiceLayerException
+    public synchronized Match getMatchByUuid(int uuid) throws ServiceLayerException
     {
         try
         {
@@ -249,7 +249,7 @@ public class Service {
         return null;
     }
 
-    public void editGame(int uuid, String gameName, String name1,  String points1, String name2, String points2,
+    public synchronized void editGame(int uuid, String gameName, String name1,  String points1, String name2, String points2,
                            String dayOfWeek, String date, String place, String peopleUntil18, String peopleUntil30,
                            String peopleUntil45, String peopleUntil60, String peopleAfter60) throws ServiceLayerException
     {
@@ -283,7 +283,7 @@ public class Service {
 
     }
 
-    public void editMatch(int uuid, String matchName, String name1,  String result1, String name2, String result2,
+    public synchronized void editMatch(int uuid, String matchName, String name1,  String result1, String name2, String result2,
                             String dayOfWeek, String date, String place, String peopleUntil18, String peopleUntil30,
                             String peopleUntil45, String peopleUntil60, String peopleAfter60) throws ServiceLayerException
     {
@@ -317,7 +317,7 @@ public class Service {
 
     }
 
-    public void deleteGame(int uuid) throws ServiceLayerException
+    public synchronized void deleteGame(int uuid) throws ServiceLayerException
     {
         try
         {
@@ -345,7 +345,7 @@ public class Service {
 
     }
 
-    public void deleteMatch(int uuid) throws ServiceLayerException
+    public synchronized void deleteMatch(int uuid) throws ServiceLayerException
     {
         try
         {
@@ -371,19 +371,6 @@ public class Service {
             throw new ServiceLayerException();
         }
 
-    }
-
-    public void deleteEvent(int index) throws ServiceLayerException
-    {
-        try {
-            EventsList<SportEvent> list = read("events");
-            list.getList().remove(index);
-            write("events", list);
-        }
-        catch (DAOLayerException ex)
-        {
-            throw new ServiceLayerException();
-        }
     }
 
 }
